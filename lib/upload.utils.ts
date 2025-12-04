@@ -1,12 +1,3 @@
-
-// import api from '@/lib/api';
-
-// interface PresignedUrlResponse {
-//   uploadUrl: string;
-//   key: string;
-//   publicUrl: string | null;
-// }
-
 export interface UploadResult {
   url: string;
   name: string;
@@ -14,13 +5,6 @@ export interface UploadResult {
   key: string;
 }
 
-/**
- * Uploads a file to R2 using a presigned URL.
- * 
- * 1. Requests a presigned URL from the backend.
- * 2. Uploads the file directly to R2 using the presigned URL.
- * 3. Returns the file info (url/key, name, size).
- */
 export const uploadFileWithPresignedUrl = async (
   file: File,
   onProgress?: (progress: number) => void

@@ -71,7 +71,7 @@ export function PricingSection() {
       );
     }
 
-    // --- Filter Plans for Display ---
+
     //  Always find the Free plan
     const freePlan = plans.find(p => p.planCode === 'free');
 

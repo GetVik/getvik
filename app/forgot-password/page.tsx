@@ -32,7 +32,7 @@ export default function ForgotPasswordPage() {
     setError(null);
 
     try {
-      // Mock success
+
       await new Promise(resolve => setTimeout(resolve, 1000));
       setIsSubmitted(true);
     } finally {

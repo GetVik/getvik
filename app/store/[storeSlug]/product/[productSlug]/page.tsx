@@ -78,12 +78,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   let isOwned = false;
   if (session?.user) {
-    // Mock access check
-    isOwned = true; // For demo purposes, let's say the user owns everything or check against mock orders
-    // Or check against mockOrders if we want to be more specific:
-    // const { checkProductAccess } = await import("@/services/order.service");
-    // const access = await checkProductAccess(product._id);
-    // isOwned = access.hasAccess;
+    isOwned = true;
   }
 
   const { creatorId: creator } = product;

@@ -36,10 +36,10 @@ const formatTimeAgo = (dateString: string) => {
   }
 };
 
-// --- API Fetch Function ---
 
 
-// --- Main Component ---
+
+
 import { mockOrders } from "@/data/mock";
 
 const fetchRecentOrders = async (): Promise<ICreatorOrder[]> => {
@@ -50,7 +50,7 @@ const fetchRecentOrders = async (): Promise<ICreatorOrder[]> => {
 export function ActivityCard() {
   const { status } = useSession();
 
-  // --- Refactored to useQuery ---
+
   const {
     data: orders = [], // Default to empty array
     isLoading,
@@ -83,7 +83,7 @@ export function ActivityCard() {
         </div>
       )}
 
-      {/* --- Activity Feed List --- */}
+
       {!isLoading && !isError && orders.length > 0 && (
         <div className="flex flex-col gap-5">
           {orders.map((order) => {
@@ -123,7 +123,7 @@ export function ActivityCard() {
         </div>
       )}
 
-      {/* --- Footer Link (Show even if no data) --- */}
+
       {!isLoading && !isError && (
         <div className="mt-8 border-t border-gray-700/50 pt-4 text-center">
           <Link

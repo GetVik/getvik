@@ -23,40 +23,14 @@ export function DownloadButton({ files, productId }: DownloadButtonProps) {
     try {
       setDownloadingUrl(fileUrl);
 
-      // 1. Get Signed URL from Backend
-      const response = await fetch(`/api/proxy/products/${productId}/download`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      await new Promise(resolve => setTimeout(resolve, 1500));
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Download failed');
-      }
+      toast.success('Download started (Mock)');
 
-      const { downloadUrl } = await response.json();
-
-      // 2. Trigger Download
-      // We use a direct link to bypass CORS issues with R2
-      const a = document.createElement('a');
-      a.href = downloadUrl;
-      a.download = fileName;
-      a.target = '_blank'; // Fallback for cross-origin downloads
-      document.body.appendChild(a);
-      a.click();
-
-      setTimeout(() => {
-        document.body.removeChild(a);
-      }, 100);
-
-      toast.success('Download started');
 
     } catch (error: unknown) {
       console.error('Download error:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Failed to download file';
-      toast.error(errorMessage);
+      toast.error('Failed to download file');
     } finally {
       setDownloadingUrl(null);
     }

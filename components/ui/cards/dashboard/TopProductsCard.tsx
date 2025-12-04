@@ -18,7 +18,7 @@ interface TopProductData {
   };
 }
 
-// --- Helper Component for Icons (Matches ActivityCard style) ---
+
 const ProductIcon = ({
   rank,
 }: {
@@ -37,7 +37,7 @@ const ProductIcon = ({
   );
 };
 
-// --- API Fetch Function ---
+
 import { mockProducts } from "@/data/mock";
 
 const fetchTopProducts = async (): Promise<TopProductData[]> => {
@@ -73,14 +73,14 @@ export function TopProductsCard() {
     <DashboardCard title="Top Products (Last 30d)" className="h-full min-h-[300px] overflow-y-auto">
       <div className="flex h-full flex-col justify-between">
 
-        {/* --- Loading State --- */}
+
         {isLoading && (
           <div className="flex flex-1 items-center justify-center py-10">
             <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
           </div>
         )}
 
-        {/* --- Error State --- */}
+
         {isError && (
           <div className="flex flex-1 flex-col items-center justify-center py-10 text-center">
             <AlertCircle className="h-10 w-10 text-red-500 mb-2" />
@@ -88,14 +88,14 @@ export function TopProductsCard() {
           </div>
         )}
 
-        {/* --- Empty State --- */}
+
         {!isLoading && !isError && topProducts.length === 0 && (
           <div className="flex flex-1 items-center justify-center py-10">
             <p className="text-gray-500">No product sales data yet.</p>
           </div>
         )}
 
-        {/* --- Content List (Matches ActivityCard Layout) --- */}
+
         {!isLoading && !isError && topProducts.length > 0 && (
           <div className="flex flex-col gap-5">
             {topProducts.map((product, index) => {
@@ -135,7 +135,7 @@ export function TopProductsCard() {
           </div>
         )}
 
-        {/* --- Footer Link (Matches ActivityCard Footer) --- */}
+
         {!isLoading && !isError && (
           <div className="mt-8 border-t border-gray-700/50 pt-4 text-center">
             <Link

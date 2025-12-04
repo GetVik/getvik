@@ -18,7 +18,6 @@ import {
 import { CurrentSubscriptionCard } from "@/components/dashboard/billing/CurrentSubscriptionCard";
 import { ChangePlanSection } from "@/components/dashboard/billing/ChangePlanSection";
 import { InvoiceHistoryCard } from "@/components/dashboard/billing/InvoiceHistoryCard";
-// import { BillingDetailsCard } from "@/components/dashboard/billing/BillingDetailsCard";
 import { DangerZoneCard } from "@/components/dashboard/billing/DangerZoneCard";
 
 import {
@@ -26,12 +25,11 @@ import {
   fetchCreatorSettings,
   fetchInvoices,
   fetchSubscription,
-  // updateCreatorSettings,
   createSubscription,
   switchSubscription,
   cancelSubscription,
 } from "@/services/subscription.service";
-import { initiateCashfreePayment } from "@/lib/cashfree";
+
 
 export default function BillingPage() {
   const queryClient = useQueryClient();
@@ -123,13 +121,10 @@ export default function BillingPage() {
     },
     onSuccess: async (data) => {
       if (isPaidSubscriptionResponse(data)) {
-        // Paid plan - Initialize Cashfree payment
+
         try {
-          await initiateCashfreePayment(
-            data.payment_session_id,
-            data.subscriptionId,
-            data.environment
-          );
+          await new Promise(resolve => setTimeout(resolve, 1500));
+          toast.success("Payment successful!");
         } catch (error) {
           console.error('Payment initialization error:', error);
           toast.error('Failed to initialize payment. Please try again.');
@@ -254,14 +249,6 @@ export default function BillingPage() {
           cancelMutation={cancelMutation}
         />
       )}
-
-      {/* {activeTab === "billing" && (
-        <BillingDetailsCard
-          details={creatorSettings}
-          isLoading={loadingCreator}
-          mutation={billingDetailsMutation}
-        />
-      )} */}
     </div>
   );
 }

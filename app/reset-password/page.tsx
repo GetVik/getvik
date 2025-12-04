@@ -52,7 +52,7 @@ function ResetPasswordContent() {
     setError(null);
 
     try {
-      // Mock success
+
       await new Promise(resolve => setTimeout(resolve, 1000));
       setSuccess(true);
       setTimeout(() => {

@@ -1,5 +1,3 @@
-import { Types } from "mongoose";
-
 export enum PayoutStatus {
   PENDING = "Pending",
   PROCESSED = "Processed",
@@ -8,7 +6,7 @@ export enum PayoutStatus {
 
 export interface IPayout {
   _id: string;
-  creatorId: Types.ObjectId | string;
+  creatorId: string;
   amount: number;
   mode: "BANK" | "UPI";
   upiId?: string;

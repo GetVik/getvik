@@ -19,7 +19,7 @@ import { mockOrders } from "@/data/mock";
 const fetchOrderCounts = async (): Promise<OrderCountsData> => {
   await new Promise((resolve) => setTimeout(resolve, 500));
   const totalOrders = mockOrders.length;
-  // Mock logic for 30 days
+
   const ordersLast30Days = mockOrders.length;
   const ordersPrev30Days = 0;
 
@@ -44,7 +44,7 @@ export function OrdersCard() {
     enabled: status === "authenticated",
   });
 
-  // --- Calculate Trend ---
+
   let percentageChange = 0;
   let trend: "up" | "down" | "neutral" = "neutral";
 

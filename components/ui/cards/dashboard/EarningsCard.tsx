@@ -37,7 +37,7 @@ export function EarningsCard() {
     enabled: status === "authenticated",
   });
 
-  // --- Calculate Trend ---
+
   let percentageChange = 0;
   let trend: "up" | "down" | "neutral" = "neutral";
 

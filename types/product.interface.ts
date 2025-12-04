@@ -1,5 +1,3 @@
-import { Types, HydratedDocument } from "mongoose";
-
 export interface IFile {
     name: string;
     url: string;
@@ -11,7 +9,6 @@ export interface IMedia {
     url: string;
 }
 
-
 export interface IPopulatedCreator {
     _id: string;
     storeName: string;
@@ -21,7 +18,7 @@ export interface IPopulatedCreator {
 }
 
 export interface IProduct {
-    _id: Types.ObjectId;
+    _id: string;
     creatorId: IPopulatedCreator;
     title: string;
     slug: string;
@@ -95,5 +92,3 @@ export interface ProductUpdateData {
 }
 
 
-
-export type ProductDocument = HydratedDocument<IProduct>;

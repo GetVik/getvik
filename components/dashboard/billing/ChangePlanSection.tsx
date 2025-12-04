@@ -50,7 +50,7 @@ export function ChangePlanSection({
   const [showPhoneModal, setShowPhoneModal] = useState(false);
   const [pendingPlanId, setPendingPlanId] = useState<string | null>(null);
 
-  // 1. Filter and Sort Plans
+
   const displayPlans: MappedPlan[] = useMemo(() => {
     if (!plans) return [];
     return plans
@@ -63,7 +63,7 @@ export function ChangePlanSection({
       .map(mapPlan);
   }, [plans, billingCycle]);
 
-  // 2. Determine User's Subscription Status
+
   const isCurrentPlan = (planId: string): boolean =>
     subscription?.planId?._id === planId;
 
@@ -166,7 +166,7 @@ export function ChangePlanSection({
               const originalPrice = plan.price;
               const isFree = plan.price === 0;
 
-              // --- Button State Logic ---
+
               let buttonText = "Change to this plan";
               let isDisabled = false;
               let ButtonIcon = null;
@@ -205,7 +205,7 @@ export function ChangePlanSection({
                 buttonClasses = "bg-white text-black hover:scale-[1.02] active:scale-[0.98] shadow-lg";
               }
 
-              // --- Styling ---
+
               // Dark mode "Ring" equivalent is border color
               const cardClasses = current
                 ? "border-none bg-[#262626] shadow-sm"

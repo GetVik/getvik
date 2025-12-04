@@ -1,5 +1,4 @@
 import React from 'react';
-// Import the renamed cards
 import { EarningsCard } from '../ui/cards/dashboard/EarningsCard';
 import { OrdersCard } from '../ui/cards/dashboard/OrdersCard';
 import { TopProductsCard } from '../ui/cards/dashboard/TopProductsCard';

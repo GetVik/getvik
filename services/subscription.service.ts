@@ -67,7 +67,7 @@ export const createSubscription = async (
     subscriptionId: "sub-new",
     clientSecret: "secret",
     paymentId: "pay-1",
-  } as any; // Mock response
+  } as any;
 };
 
 export const switchSubscription = async (

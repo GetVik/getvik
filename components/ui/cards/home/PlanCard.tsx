@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useSession } from 'next-auth/react';
 import { createSubscription, switchSubscription } from '@/services/subscription.service';
 import { isPaidSubscriptionResponse } from '@/types/subscription.interface';
-import { initiateCashfreePayment } from '@/lib/cashfree';
+
 import { PhoneRequiredModal } from '@/components/modals/PhoneRequiredModal';
 import { fetchUserProfile } from '@/services/settings.service';
 import CountUp from 'react-countup';
@@ -33,10 +33,9 @@ export function PlanCard({ plan, subscriptionStatus, isTrialEligible }: PlanCard
   const isPlus = plan.planCode.includes('plus');
 
   // Extract fee percentage from name or description if possible, otherwise hardcode based on known types
-  // Extract fee percentage from name or description if possible, otherwise hardcode based on known types
-  let feePercentage = 10;
-  if (isPro) feePercentage = 2.5;
-  else if (isPlus) feePercentage = 7;
+
+  // Default fee percentage or from plan details if available
+  const feePercentage = 5;
 
   const hasTrialOffer = (plan.trialDays || 0) > 0;
   const showTrialPrice = hasTrialOffer && isTrialEligible;
@@ -44,7 +43,7 @@ export function PlanCard({ plan, subscriptionStatus, isTrialEligible }: PlanCard
   const displayPrice = showTrialPrice ? 0 : plan.price;
   const originalPrice = plan.price;
 
-  // --- Logic 3: Checkout ---
+
   const handleCheckout = async () => {
     if (!session) {
       router.push("/signin");
@@ -78,12 +77,10 @@ export function PlanCard({ plan, subscriptionStatus, isTrialEligible }: PlanCard
 
       // Check if it's a paid subscription requiring payment
       if (isPaidSubscriptionResponse(response)) {
-        // Paid plan - Initialize Cashfree payment
-        await initiateCashfreePayment(
-          response.payment_session_id,
-          response.subscriptionId,
-          response.environment
-        );
+
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        toast.success("Payment successful!");
+        router.push('/dashboard/billing');
       } else {
         // Free or Trial plan - Instant activation
         toast.success(
@@ -116,7 +113,7 @@ export function PlanCard({ plan, subscriptionStatus, isTrialEligible }: PlanCard
     await handleCheckout();
   };
 
-  // --- Logic 4: Button Config ---
+
   const getButtonConfig = () => {
     // For Free plan: Always show "Default Plan" text, never a button
     if (isFree) {

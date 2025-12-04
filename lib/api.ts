@@ -1,4 +1,4 @@
-// Mock API wrapper to prevent accidental calls
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const api = {

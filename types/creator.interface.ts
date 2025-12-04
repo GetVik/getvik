@@ -1,7 +1,5 @@
-import { Types } from "mongoose";
-
 export interface ICreator {
-  userId: Types.ObjectId;
+  userId: string;
   storeName: string;
   storeSlug: string;
   bio?: string;

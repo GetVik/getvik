@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import { createCheckoutSession } from '@/services/transaction.service';
-import { load } from '@cashfreepayments/cashfree-js';
+
 import { PhoneRequiredModal } from '@/components/modals/PhoneRequiredModal';
 import Image from 'next/image';
 import { fetchUserProfile } from '@/services/settings.service';
@@ -22,7 +22,7 @@ export default function CheckoutPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [showPhoneModal, setShowPhoneModal] = useState(false);
 
-    useEffect(() => {                                                                       
+    useEffect(() => {
         if (items.length === 0) {
             router.push('/cart');
         }
@@ -55,40 +55,19 @@ export default function CheckoutPage() {
         setIsLoading(true);
 
         try {
-            // For now, we only support single item checkout as per the backend service
-            // We will take the first item for now, or loop if backend supports multiple
-            // Assuming backend currently supports one product per transaction based on previous code
-            // TODO: Update backend to support cart checkout. For now, we'll process the first item.
-
             if (items.length > 1) {
                 toast.error("Currently only single item checkout is supported. Please purchase items individually.");
                 setIsLoading(false);
                 return;
             }
 
-            const product = items[0].product;
 
-            const { payment_session_id, environment } = await createCheckoutSession(product._id);
+            await new Promise(resolve => setTimeout(resolve, 2000));
 
-            if (!payment_session_id) {
-                throw new Error('Failed to create payment session');
-            }
+            toast.success("Payment successful!");
 
-            const cashfree = await load({
-                mode: environment,
-            });
-
-            if (!cashfree) {
-                throw new Error('Cashfree SDK failed to load');
-            }
-
-            await cashfree.checkout({
-                paymentSessionId: payment_session_id,
-                redirectTarget: '_self',
-            });
-
-            // Note: Cart clearing should ideally happen after successful payment webhook/callback
-            // But for now, we rely on the redirect.
+            // Redirect to order complete or dashboard
+            router.push('/dashboard/orders');
 
         } catch (err) {
             console.error('Checkout failed', err);

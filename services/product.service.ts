@@ -8,10 +8,10 @@ export interface Product extends Omit<IProduct, 'creatorId' | 'files' | '_id'> {
 
 export const fetchProducts = async (): Promise<Product[]> => {
   await new Promise((resolve) => setTimeout(resolve, 500));
-  // Cast mock products to Product type for demo
+
   return mockProducts.map(p => ({
     ...p,
-    files: [], // Mock files
+    files: [],
     status: 'Active',
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -48,20 +48,20 @@ export const fetchProductById = async (productId: string): Promise<IProduct> => 
 
 export const updateProduct = async (productId: string, updateData: any) => {
   await new Promise((resolve) => setTimeout(resolve, 500));
-  console.log("Mock update product:", productId, updateData);
+  console.log("Update product:", productId, updateData);
 };
 
 export const deleteProductById = async (productId: string) => {
   await new Promise((resolve) => setTimeout(resolve, 500));
-  console.log("Mock delete product:", productId);
+  console.log("Delete product:", productId);
 };
 
 export const createProduct = async (productData: any) => {
   await new Promise((resolve) => setTimeout(resolve, 500));
-  console.log("Mock create product:", productData);
+  console.log("Create product:", productData);
 };
 
 export const deleteProduct = async (productId: string) => {
   await new Promise((resolve) => setTimeout(resolve, 500));
-  console.log("Mock delete product:", productId);
+  console.log("Delete product:", productId);
 };
