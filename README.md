@@ -1,60 +1,68 @@
-# GetVik - Public Mock Frontend
+# GetVik – Digital Marketplace Frontend
 
-## ⚠️ Public Mock Frontend
-This repository contains a **mock frontend** for demonstration purposes only.
-- No real backend connection.
-- No real payment processing.
-- Data is reset on refresh.
-- All data is mocked in `data/mock.ts` and services.
+![GetVik Banner](public/banner.png)
 
-## 🔒 Security & Privacy
+<div align="center">
 
-This repository is a **mock frontend** designed for demonstration and educational purposes.
+[![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
 
-- **No Real Data**: All user data, products, and transactions are simulated in the browser or via mock API handlers.
-- **No Real Payments**: Payment flows are UI-only and do not process actual money.
-- **Credentials**: The credentials provided (`demo@getvik.com` / `password`) are hardcoded for the demo. 
-- **Secrets**: If you fork this to build a real app, please generate your own `NEXTAUTH_SECRET` and other environment variables.
+This is the frontend for GetVik. 
+Everything here is UI-only, more of a public peek into the design and structure.
+
+</div>
+
+---
+
+## ⚠️ Mock Frontend Only
+
+**This repo contains no real backend or payment logic.**
+Data is mocked locally and resets on refresh. Good for demos and UI exploration.
+
+
+## Tech Stack
+
+*   **Framework**: Next.js
+*   **Language**: TypeScript
+*   **Styling**: Tailwind CSS
+*   **Animations**: Framer Motion, GSAP
 
 ## Getting Started
 
-1.  **Clone the repository**
-    ```bash
-    git clone https://github.com/GetVik/GetVik.git
-    cd GetVik
-    ```
+```bash
+git clone https://github.com/GetVik/GetVik.git
+npm install
+cp .env.example .env
+npm run dev
+```
 
-2.  **Install dependencies**
-    ```bash
-    npm install
-    # or
-    yarn install
-    ```
+Visit [http://localhost:3000](http://localhost:3000).
 
-3.  **Setup Environment**
-    Copy `.env.example` to `.env`:
-    ```bash
-    cp .env.example .env
-    ```
+## Demo Login
 
-4.  **Run the development server**
-    ```bash
-    npm run dev
-    ```
+| Role | Email | Password |
+| :--- | :--- | :--- |
+| **Creator** | `demo@getvik.com` | `password` |
 
-    Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project Structure
 
-## Demo Credentials
+```
+app/          - App Router pages/layouts
+components/   - UI components
+content/      - Static content (MDX etc)
+context/      - React Context providers
+data/         - Mock data
+hooks/        - Custom React hooks
+lib/          - Helpers and utils
+public/       - Static assets
+services/     - Mock services
+types/        - Type definitions
+```
 
-To sign in as a creator:
-- **Email**: `demo@getvik.com`
-- **Password**: `password`
+## Contributing
 
-## What is Mocked?
-- **Authentication**: Uses NextAuth with hardcoded credentials.
-- **Database**: All data is served from in-memory arrays in `data/mock.ts`.
-- **File Uploads**: Simulates upload delay and returns blob URLs.
-- **Payments**: Simulates checkout flow and redirects back to success page.
+PRs welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## License
-MIT
+
+MIT License.
