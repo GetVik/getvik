@@ -2,7 +2,8 @@
 
 export const getErrorMessage = (error: unknown): string => {
   if (error && typeof error === 'object' && 'response' in error) {
-    const resp = (error as any).response;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const resp = (error as { response: { data: any } }).response;
     if (resp && resp.data) {
       const data = resp.data;
 

@@ -33,9 +33,8 @@ export function PlanCard({ plan, subscriptionStatus, isTrialEligible }: PlanCard
   const isPlus = plan.planCode.includes('plus');
 
   // Extract fee percentage from name or description if possible, otherwise hardcode based on known types
-
   // Default fee percentage or from plan details if available
-  const feePercentage = 5;
+  const feePercentage = isFree ? 10 : isPlus ? 7 : isPro ? 2.5 : 5;
 
   const hasTrialOffer = (plan.trialDays || 0) > 0;
   const showTrialPrice = hasTrialOffer && isTrialEligible;

@@ -5,8 +5,6 @@ import { motion } from 'framer-motion';
 import { useState, useEffect, Suspense } from 'react';
 import { Loader2, ArrowLeft } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Image from 'next/image';
-import BlobBg from '@/public/blob-bg.svg';
 
 const Logo = () => (
   <svg
@@ -184,15 +182,6 @@ export default function ResetPasswordPage() {
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-gray-50 p-4 bg-dot-pattern">
       {/* Background Blur */}
-      <div className="absolute inset-0 -z-10 flex justify-center items-center">
-        <Image
-          src={BlobBg}
-          alt="abstract background"
-          fill
-          className="object-cover opacity-60 blur-[60px] scale-125"
-          priority
-        />
-      </div>
 
       <motion.div
         className="w-full max-w-sm z-10"

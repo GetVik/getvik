@@ -6,8 +6,6 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { signIn } from 'next-auth/react';
 import { useState, useEffect, Suspense } from 'react';
-import Image from 'next/image';
-import BlobBg from '@/public/blob-bg.svg';
 import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Loader2, AlertCircle } from 'lucide-react';
@@ -81,15 +79,6 @@ const LoginContent = () => {
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-gray-50 p-4 bg-dot-pattern">
       {/* Background Blur */}
-      <div className="absolute inset-0 -z-10 flex justify-center items-center">
-        <Image
-          src={BlobBg}
-          alt="abstract background"
-          fill
-          className="object-cover opacity-60 blur-[60px] scale-125"
-          priority
-        />
-      </div>
 
       {/* Content */}
       <motion.div

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Loader2, Lock } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { createCheckoutSession } from '@/services/transaction.service';
+
 
 import { PhoneRequiredModal } from '@/components/modals/PhoneRequiredModal';
 import { fetchUserProfile } from '@/services/settings.service';
@@ -15,7 +15,8 @@ interface CheckoutButtonProps {
   product: IFullProduct;
 }
 
-export function CheckoutButton({ product }: CheckoutButtonProps) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function CheckoutButton({ product: _product }: CheckoutButtonProps) {
   const { status } = useSession();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);

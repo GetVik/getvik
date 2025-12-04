@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
-import { createCheckoutSession } from '@/services/transaction.service';
 
 import { PhoneRequiredModal } from '@/components/modals/PhoneRequiredModal';
 import Image from 'next/image';

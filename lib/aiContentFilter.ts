@@ -3,6 +3,7 @@
  * Returns true if content appears to be generic marketing template
  */
 
+/*
 // Common marketing buzzwords and phrases used in AI-generated content
 const MARKETING_BUZZWORDS = [
   'cutting-edge',
@@ -72,6 +73,7 @@ const PROMOTIONAL_PHRASES = [
   'what you get',
   'why choose',
 ];
+*/
 
 interface FilterResult {
   isGeneric: boolean;
@@ -79,7 +81,8 @@ interface FilterResult {
   score: number; // 0-100, higher = more likely to be generic
 }
 
-export function detectGenericAIContent(content: string, productName?: string): FilterResult {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function detectGenericAIContent(_content: string, _productName?: string): FilterResult {
 
   return {
     isGeneric: false,

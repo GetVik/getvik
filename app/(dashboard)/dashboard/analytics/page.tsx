@@ -115,7 +115,7 @@ export default function AnalyticsPage() {
 
   if (error) {
     const err = error as Error;
-    if ('status' in err && (err as any).status === 403) {
+    if ('status' in err && (err as unknown as { status: number }).status === 403) {
       return <UpgradeToProNotice />;
     }
     return (

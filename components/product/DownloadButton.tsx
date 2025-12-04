@@ -11,12 +11,14 @@ interface DownloadButtonProps {
   productId: string;
 }
 
-export function DownloadButton({ files, productId }: DownloadButtonProps) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function DownloadButton({ files, productId: _productId }: DownloadButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [downloadingUrl, setDownloadingUrl] = useState<string | null>(null);
 
 
-  const handleDownload = async (e: React.MouseEvent, fileUrl: string, fileName: string) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleDownload = async (e: React.MouseEvent, fileUrl: string, _fileName: string) => {
     e.preventDefault();
     if (downloadingUrl) return;
 

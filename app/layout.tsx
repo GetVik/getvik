@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
 import { AuthProvider } from '@/components/auth/AuthProvider';
-import Script from 'next/script';
 import QueryProvider from '@/components/queryProvider/QueryProvider';
 import { Toaster } from 'react-hot-toast';
 import { CartProvider } from '@/context/CartContext';

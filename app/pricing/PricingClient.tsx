@@ -80,7 +80,7 @@ export default function PricingPage() {
         );
 
         return (
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-3 max-w-5xl mx-auto items-stretch">
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-3 max-w-7xl mx-auto items-stretch">
                 {freePlan && (
                     <PlanCard
                         plan={freePlan}
