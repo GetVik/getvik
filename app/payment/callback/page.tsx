@@ -16,29 +16,10 @@ function PaymentCallbackContent() {
         return;
       }
 
-      try {
-        // Import dynamically to avoid circular deps if any, though not strictly needed here
-        const { verifyPayment } = await import("@/services/order.service");
-        const result = await verifyPayment(orderId);
-
-        if (result.success && result.order) {
-          router.replace(`/order-complete?order_id=${result.order._id}`);
-        } else {
-          // Payment failed or cancelled
-          const storeSlug = result.order?.creatorId?.storeSlug;
-          const productSlug = result.order?.productId?.slug;
-
-          if (storeSlug && productSlug) {
-            router.replace(`/store/${storeSlug}/product/${productSlug}`);
-          } else {
-            // Fallback if we can't determine where to go
-            router.replace("/");
-          }
-        }
-      } catch (error) {
-        console.error("Verification error:", error);
-        router.replace("/");
-      }
+      // Mock verification success
+      setTimeout(() => {
+        router.replace(`/order-complete?order_id=${orderId}`);
+      }, 1000);
     };
 
     verify();

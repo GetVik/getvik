@@ -74,21 +74,7 @@ export function Navbar() {
 
           {/* Right: Auth / Dashboard */}
           <div className="flex items-center justify-end gap-3 w-1/3">
-            <div className="hidden xl:block">
-              <a
-                href="https://www.producthunt.com/products/getvik?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-getvik"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Image
-                  src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1043037&theme=dark&t=1764833414467"
-                  alt="GetVik - The simplest way to sell digital products in India. | Product Hunt"
-                  style={{ width: '180px', height: 'auto' }}
-                  width={180}
-                  height={39}
-                />
-              </a>
-            </div>
+
             <NavbarAuthSection />
           </div>
         </div>
@@ -135,21 +121,7 @@ export function Navbar() {
 
               <div className="border-t border-gray-100 pt-4">
                 <MobileAuthSection onLinkClick={() => setIsOpen(false)} />
-                <div className="mt-4 flex justify-center">
-                  <a
-                    href="https://www.producthunt.com/products/getvik?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-getvik"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Image
-                      src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1043037&theme=dark&t=1764833414467"
-                      alt="GetVik - The simplest way to sell digital products in India. | Product Hunt"
-                      style={{ width: '180px', height: 'auto' }}
-                      width={180}
-                      height={39}
-                    />
-                  </a>
-                </div>
+
               </div>
             </div>
           </motion.div>

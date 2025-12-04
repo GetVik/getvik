@@ -50,7 +50,7 @@ const inter = localFont({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://getvik.live'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
   title: {
     default: 'Sell Digital Products in India | Templates, PDFs & Code Tools',
     template: '%s | GetVik',
@@ -80,7 +80,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_IN',
-    url: 'https://getvik.live',
+    url: 'http://localhost:3000',
     siteName: 'GetVik',
     title: 'GetVik - India\'s Digital Marketplace for Creators',
     description:
@@ -143,14 +143,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <head>
-        <Script
-          src="https://checkout.razorpay.com/v1/checkout.js"
-          strategy="beforeInteractive"
-        />
-        <Script
-          src="https://sdk.cashfree.com/js/v3/cashfree.js"
-          strategy="beforeInteractive"
-        />
+
       </head>
       <body className={`font-sans antialiased bg-black text-white`}>
         <QueryProvider>

@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import { mockCreator, mockCreator2, mockProducts } from "@/data/mock";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://getvik.com";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://example.com";
 
   // Static routes
   const routes = [

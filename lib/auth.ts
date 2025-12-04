@@ -10,7 +10,7 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-
+        // MOCK CREDENTIALS FOR DEMO PURPOSES ONLY
         if (credentials?.email === "demo@getvik.com" && credentials?.password === "password") {
           return {
             id: "mock-creator-id",
