@@ -1,11 +1,11 @@
-# GetVik – Digital Marketplace Frontend
+# GetVik
 
 ![GetVik Banner](public/banner.png)
 
 <div align="center">
 
-[![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
+[![Next.js](https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-black?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
 
 This is the frontend for GetVik. 
 Everything here is UI-only, more of a public peek into the design and structure.
