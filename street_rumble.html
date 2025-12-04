@@ -1,0 +1,928 @@
+<!-- Save as street_rumble.html -->
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Street Rumble — Crowd vs Crowd AI Chaos</title>
+    <style>
+        :root {
+            --bg: #0c1018;
+            --panel: #0f1b26;
+            --accent: #ffb86b;
+            --accent2: #6ef;
+            --muted: #9fb2c8;
+            --danger: #ff7a7a;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            background: var(--bg);
+            color: #e7f0f6;
+            font-family: Inter, system-ui, Roboto, Arial;
+        }
+
+        .wrap {
+            max-width: 1100px;
+            margin: 12px auto;
+            padding: 12px
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 20px
+        }
+
+        #game {
+            display: block;
+            margin: 12px auto;
+            border-radius: 10px;
+            background: #071827;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, .6)
+        }
+
+        .ui {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            justify-content: space-between;
+            margin: 8px 0
+        }
+
+        .panel {
+            background: linear-gradient(180deg, #071a24 0, #04101a 100%);
+            padding: 8px 12px;
+            border-radius: 8px;
+            box-shadow: inset 0 -2px 0 rgba(255, 255, 255, 0.02)
+        }
+
+        button {
+            background: var(--accent);
+            border: none;
+            padding: 7px 10px;
+            border-radius: 7px;
+            font-weight: 700;
+            cursor: pointer;
+            color: #0b1016
+        }
+
+        .small {
+            font-size: 13px;
+            color: var(--muted)
+        }
+
+        #overlay {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none
+        }
+
+        .modal {
+            pointer-events: auto;
+            background: rgba(2, 6, 10, .95);
+            padding: 18px;
+            border-radius: 12px;
+            color: #eaf6ff;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, .7);
+            max-width: 92vw
+        }
+
+        .flex {
+            display: flex;
+            gap: 8px;
+            align-items: center
+        }
+
+        .shop-item {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 8px;
+            border-radius: 8px;
+            min-width: 140px;
+            text-align: center
+        }
+
+        .stat {
+            font-weight: 800;
+            color: var(--accent)
+        }
+
+        footer {
+            opacity: .7;
+            font-size: 12px;
+            text-align: center;
+            margin-top: 8px
+        }
+
+        a {
+            color: #9fe;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <header>
+            <h1>Street Rumble</h1>
+            <div class="small">Lead your gang. Survive chaotic city events. Short runs designed to be addictive.</div>
+            <div style="margin-left:auto" class="small">Build: v1.0 • Single-file HTML</div>
+        </header>
+
+        <div class="ui">
+            <div class="panel">Wave <span id="wave">0</span> • Score <span id="score">0</span></div>
+            <div class="panel">
+                <div style="display:flex;gap:12px">
+                    <div>Crew <span id="crewSize">0</span></div>
+                    <div>Cash <span id="cash">0</span></div>
+                    <div style="color:var(--accent2)">Leader HP <span id="leaderHp">100</span>%</div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="flex">
+                    <button id="pauseBtn">Pause</button>
+                    <button id="restartBtn">Restart</button>
+                    <button id="screenshotBtn">Screenshot</button>
+                </div>
+            </div>
+        </div>
+
+        <canvas id="game" width="960" height="640"></canvas>
+
+        <div class="ui">
+            <div class="panel" style="flex:1">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                    <div><strong>Perks</strong> <span class="small">buy with cash between waves</span></div>
+                    <div class="small">Tip: chaos + crowd = viral clips</div>
+                </div>
+                <div style="display:flex;gap:10px;margin-top:8px">
+                    <div class="shop-item">
+                        <div>Recruit +1</div>
+                        <div class="small">Cost <span class="stat" id="costRecruit">8</span></div>
+                        <div style="margin-top:8px"><button data-buy="recruit">Buy</button></div>
+                    </div>
+                    <div class="shop-item">
+                        <div>Damage +2</div>
+                        <div class="small">Cost <span class="stat" id="costDmg">10</span></div>
+                        <div style="margin-top:8px"><button data-buy="dmg">Buy</button></div>
+                    </div>
+                    <div class="shop-item">
+                        <div>Speed +10%</div>
+                        <div class="small">Cost <span class="stat" id="costSpeed">9</span></div>
+                        <div style="margin-top:8px"><button data-buy="speed">Buy</button></div>
+                    </div>
+                    <div class="shop-item">
+                        <div>Adrenal (AOE)</div>
+                        <div class="small">Cost <span class="stat" id="costAOE">12</span></div>
+                        <div style="margin-top:8px"><button data-buy="aoe">Buy</button></div>
+                    </div>
+                    <div class="shop-item">
+                        <div>Heal (30%)</div>
+                        <div class="small">Cost <span class="stat" id="costHeal">15</span></div>
+                        <div style="margin-top:8px"><button data-buy="heal">Buy</button></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel" style="width:320px">
+            <div><strong>Run Summary</strong></div>
+            <div style="margin-top:6px" class="small">
+                <div>High score: <span id="highScore">0</span></div>
+                <div>Best waves: <span id="bestWaves">0</span></div>
+                <div style="margin-top:6px">Event Feed:</div>
+                <div id="eventFeed"
+                    style="height:120px;overflow:auto;background:rgba(255,255,255,0.01);padding:6px;border-radius:6px;margin-top:6px;font-size:13px">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>Made for quick addictive runs • Replace assets to brand • Use Tauri/Electron for native builds</footer>
+    </div>
+
+    <div id="overlay"></div>
+
+    <script>
+        (() => {
+            /* ==============================
+               Core game variables
+               ============================== */
+            const canvas = document.getElementById('game');
+            const ctx = canvas.getContext('2d');
+            const W = canvas.width, H = canvas.height;
+            const waveEl = document.getElementById('wave');
+            const scoreEl = document.getElementById('score');
+            const crewEl = document.getElementById('crewSize');
+            const cashEl = document.getElementById('cash');
+            const leaderHpEl = document.getElementById('leaderHp');
+            const highScoreEl = document.getElementById('highScore');
+            const bestWavesEl = document.getElementById('bestWaves');
+            const eventFeedEl = document.getElementById('eventFeed');
+
+            const pauseBtn = document.getElementById('pauseBtn');
+            const restartBtn = document.getElementById('restartBtn');
+            const screenshotBtn = document.getElementById('screenshotBtn');
+
+            const buyButtons = document.querySelectorAll('[data-buy]');
+
+            const overlay = document.getElementById('overlay');
+
+            let running = true;
+            let last = performance.now();
+            let dtAcc = 0;
+
+            let wave = 0;
+            let score = 0;
+            let cash = 0;
+
+            // persistent bests
+            let highScore = parseInt(localStorage.getItem('sr_high') || '0', 10);
+            let bestWaves = parseInt(localStorage.getItem('sr_waves') || '0', 10);
+            highScoreEl.textContent = highScore;
+            bestWavesEl.textContent = bestWaves;
+
+            // player-led gang
+            const gang = { members: [], maxMembers: 12 };
+            const enemies = [];
+            const bullets = [];
+            const particles = [];
+            const events = [];
+
+            // player "leader" controlled by mouse
+            const leader = { x: W / 2, y: H / 2, r: 12, speed: 220, hp: 100, maxHp: 100, lastDash: 0, dashCooldown: 800 };
+
+            // shop/perk costs
+            let costs = { recruit: 8, dmg: 10, speed: 9, aoe: 12, heal: 15 };
+
+            // gameplay tuning (easy to tweak later)
+            const BASE_ENEMY_COUNT = 5;
+            const ENEMY_SPAWN_SCALE = 1.35;
+
+            // Floating text for damage numbers
+            const floatingTexts = [];
+            function spawnFloatingText(x, y, text, color = '#fff', size = 14) {
+                floatingTexts.push({ x, y, text, color, size, life: 1.0, vy: -30 });
+            }
+
+            /* ==============================
+               Utilities
+               ============================== */
+            function rand(min, max) { return Math.random() * (max - min) + min; }
+            function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+            function dist(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
+            function nowStr() { return new Date().toLocaleTimeString(); }
+            function addEvent(msg) {
+                const el = document.createElement('div');
+                el.textContent = `[${nowStr()}] ${msg}`;
+                eventFeedEl.prepend(el);
+                // trim feed
+                while (eventFeedEl.childElementCount > 60) eventFeedEl.removeChild(eventFeedEl.lastChild);
+            }
+
+            /* ==============================
+               Audio (tiny WebAudio for SFX)
+               ============================== */
+            const audioCtx = (window.AudioContext || window.webkitAudioContext) ? new (window.AudioContext || window.webkitAudioContext)() : null;
+            function beep(freq, time = 0.08, vol = 0.06) {
+                if (!audioCtx) return;
+                const o = audioCtx.createOscillator();
+                const g = audioCtx.createGain();
+                o.connect(g); g.connect(audioCtx.destination);
+                o.type = 'sawtooth';
+                o.frequency.value = freq;
+                g.gain.value = vol;
+                o.start();
+                g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + time);
+                o.stop(audioCtx.currentTime + time + 0.02);
+            }
+            function punchSound() { beep(120, 0.06, 0.08); }
+            function cashSound() { beep(800, 0.06, 0.08); }
+
+            /* ==============================
+               Entities: gang members and enemies
+               ============================== */
+            function spawnGangMember() {
+                if (gang.members.length >= gang.maxMembers) return;
+                const id = 'g' + Math.random().toString(36).slice(2, 8);
+                const m = { id, x: leader.x + rand(-24, 24), y: leader.y + rand(-24, 24), r: 8, hp: 18, dmg: 4, speed: 200, state: 'follow' };
+                gang.members.push(m);
+                crewEl.textContent = gang.members.length;
+            }
+
+            function spawnEnemy(type = 'thug', x = null, y = null) {
+                const angle = Math.random() * Math.PI * 2;
+                const d = rand(240, 420);
+                if (x === null) x = W / 2 + Math.cos(angle) * d;
+                if (y === null) y = H / 2 + Math.sin(angle) * d;
+
+                let stats = { r: 12, hp: 26, dmg: 6, speed: 90, color: '#ffda7a' };
+                if (type === 'brute') stats = { r: 16, hp: 55, dmg: 12, speed: 65, color: '#ff9b9b' };
+                if (type === 'boss') stats = { r: 28, hp: 400, dmg: 25, speed: 55, color: '#ff4444' };
+
+                const e = {
+                    id: 'e' + Math.random().toString(36).slice(2, 8),
+                    x, y,
+                    r: stats.r,
+                    hp: stats.hp,
+                    maxHp: stats.hp,
+                    dmg: stats.dmg,
+                    speed: stats.speed,
+                    type,
+                    color: stats.color
+                };
+                enemies.push(e);
+            }
+
+            /* ==============================
+               Bullets and particles (visual)
+               ============================== */
+            function spawnBullet(x, y, vx, vy, dmg, ttl = 1.4) {
+                bullets.push({ x, y, vx, vy, dmg, ttl });
+            }
+            function spawnParticle(x, y, dx, dy, life, color, size = 3, gravity = 0, friction = 1) {
+                particles.push({ x, y, dx, dy, life, color, size, gravity, friction });
+            }
+
+            /* ==============================
+               Waves & Random events
+               ============================== */
+            function startNextWave() {
+                wave++;
+                waveEl.textContent = wave;
+                addEvent(`Wave ${wave} — incoming chaos!`);
+                // spawn enemies scaled by wave
+                // spawn enemies scaled by wave
+                if (wave % 5 === 0) {
+                    addEvent('WARNING: BOSS APPROACHING!');
+                    spawnEnemy('boss');
+                    cameraShake = 20;
+                    // spawn some minions
+                    for (let i = 0; i < 3; i++) spawnEnemy('thug');
+                } else {
+                    const count = Math.round(BASE_ENEMY_COUNT + Math.pow(wave, 1.15) * ENEMY_SPAWN_SCALE);
+                    for (let i = 0; i < count; i++) {
+                        spawnEnemy(Math.random() < 0.14 ? 'brute' : 'thug');
+                    }
+                }
+                // give player some cash baseline
+                cash += 2 + Math.floor(wave * 0.6);
+                cashEl.textContent = cash;
+                // sometimes trigger city event immediately at wave start
+                if (Math.random() < Math.min(0.35, 0.05 + wave * 0.03)) triggerRandomEvent();
+            }
+
+            // City events: bus, police block, vendor spill, rival gang spawn, fireworks (visual)
+            function triggerRandomEvent() {
+                const r = Math.random();
+                if (r < 0.18) {
+                    // bus plows: knocks back both factions in corridor => instantaneous heavy chaos
+                    addEvent('Bus ploughs through the street! Chaos knocks everyone around.');
+                    // camera shake + particle
+                    for (let i = 0; i < 40; i++) spawnParticle(rand(150, W - 150), rand(100, H - 100), rand(-80, 80), rand(-40, -160), 1.0, '#ffb86b', 4);
+                    // damage both sides slight
+                    enemies.forEach(e => { e.hp -= rand(4, 10); });
+                    gang.members.forEach(m => { m.hp -= rand(1, 6); });
+                    beep(200, 0.12, 0.05);
+                } else if (r < 0.36) {
+                    addEvent('Police block — lane closed. Enemies reroute.');
+                    // no real physics, but spawn police drones that chase and stun for a bit
+                    const spawnCount = 3 + Math.floor(wave * 0.1);
+                    for (let i = 0; i < spawnCount; i++) {
+                        spawnEnemy('brute');
+                    }
+                    beep(260, 0.08, 0.05);
+                } else if (r < 0.6) {
+                    addEvent('Vendor stall spills — loot everywhere!');
+                    const loot = 3 + Math.floor(Math.random() * 4);
+                    cash += loot;
+                    cashEl.textContent = cash;
+                    cashSound();
+                } else if (r < 0.85) {
+                    addEvent('Rival gang spotted — they want a fight!');
+                    for (let i = 0; i < Math.max(2, Math.floor(wave * 0.8)); i++) spawnEnemy(Math.random() < 0.3 ? 'brute' : 'thug');
+                    beep(180, 0.07, 0.06);
+                } else {
+                    addEvent('Fireworks distract everyone — momentary stun.');
+                    // small stun effect represented by slowing speeds briefly
+                    enemies.forEach(e => e.speed *= 0.7);
+                    gang.members.forEach(m => m.speed *= 0.7);
+                    setTimeout(() => {
+                        enemies.forEach(e => e.speed /= 0.7);
+                        gang.members.forEach(m => m.speed /= 0.7);
+                    }, 2000);
+                    beep(600, 0.12, 0.04);
+                }
+            }
+
+            /* ==============================
+               Shop logic (between waves)
+               ============================== */
+            let inShop = false;
+            function openShopModal() {
+                inShop = true;
+                showModal(`Wave ${wave} cleared!\nCash: ${cash}\nBuy upgrades or continue.`, [
+                    { text: 'Continue', action: () => { hideModal(); startNextWave(); inShop = false; } }
+                ]);
+            }
+
+            function buyItem(type) {
+                if (inShop) return; // can't buy during shop modal actions — but purchases are immediate from UI panel
+                if (type === 'recruit') {
+                    if (cash < costs.recruit) { alert('Not enough cash'); return; }
+                    cash -= costs.recruit; cashEl.textContent = cash; spawnGangMember(); beep(900, 0.06, 0.06);
+                }
+                if (type === 'dmg') {
+                    if (cash < costs.dmg) { alert('Not enough cash'); return; }
+                    cash -= costs.dmg; cashEl.textContent = cash;
+                    gang.members.forEach(m => m.dmg = (m.dmg || 4) + 2);
+                    addEvent('Your gang hits harder.');
+                }
+                if (type === 'speed') {
+                    if (cash < costs.speed) { alert('Not enough cash'); return; }
+                    cash -= costs.speed; cashEl.textContent = cash;
+                    gang.members.forEach(m => m.speed *= 1.1);
+                    addEvent('Your gang moves faster.');
+                }
+                if (type === 'aoe') {
+                    if (cash < costs.aoe) { alert('Not enough cash'); return; }
+                    cash -= costs.aoe; cashEl.textContent = cash;
+                    // temporary AOE boost: next 6 seconds gang deals splash on hit
+                    gang.aoe = (gang.aoe || 0) + 6;
+                    addEvent('Adrenal AOE active for 6s.');
+                }
+                if (type === 'heal') {
+                    if (cash < costs.heal) { alert('Not enough cash'); return; }
+                    cash -= costs.heal; cashEl.textContent = cash;
+                    leader.hp = Math.min(leader.hp + leader.maxHp * 0.3, leader.maxHp);
+                    leaderHpEl.textContent = Math.ceil(leader.hp);
+                    gang.members.forEach(m => m.hp += 10);
+                    addEvent('Gang healed.');
+                    beep(600, 0.1, 0.1);
+                }
+            }
+
+            buyButtons.forEach(b => {
+                b.addEventListener('click', () => buyItem(b.dataset.buy));
+            });
+
+            /* ==============================
+               Player input
+               ============================== */
+            const input = { mx: W / 2, my: H / 2, mouseDown: false };
+            canvas.addEventListener('mousemove', e => {
+                const r = canvas.getBoundingClientRect();
+                input.mx = (e.clientX - r.left) * (canvas.width / r.width);
+                input.my = (e.clientY - r.top) * (canvas.height / r.height);
+            });
+            canvas.addEventListener('mousedown', e => {
+                input.mouseDown = true;
+                const now = performance.now();
+                if (now - leader.lastDash < leader.dashCooldown) return;
+                leader.lastDash = now;
+
+                // leader dash: quick put bullet-like attack from gang
+                // let's spawn a short burst
+                for (let i = 0; i < 3; i++) {
+                    const ang = Math.atan2(input.my - leader.y, input.mx - leader.x) + rand(-0.12, 0.12);
+                    spawnBullet(leader.x + Math.cos(ang) * 12, leader.y + Math.sin(ang) * 12, Math.cos(ang) * 520 + rand(-40, 40), Math.sin(ang) * 520 + rand(-40, 40), 8, 0.6);
+                }
+                punchSound();
+                // visual dash effect
+                spawnParticle(leader.x, leader.y, 0, 0, 0.5, '#fff', 20);
+            });
+            canvas.addEventListener('mouseup', () => input.mouseDown = false);
+
+            /* ==============================
+               Simple AI & physics step
+               ============================== */
+            function step(dt) {
+                if (!running) return;
+
+                // leader moves toward mouse
+                const lx = leader.x, ly = leader.y;
+                const angL = Math.atan2(input.my - ly, input.mx - lx);
+                leader.x += Math.cos(angL) * leader.speed * dt;
+                leader.y += Math.sin(angL) * leader.speed * dt;
+                leader.x = clamp(leader.x, 30, W - 30);
+                leader.y = clamp(leader.y, 30, H - 30);
+
+                // members follow leader with simple flocking
+                gang.members.forEach((m, i) => {
+                    // follow target position offset a bit to form a crowd
+                    const target = { x: leader.x + Math.cos(i * 1.6) * 16 + rand(-8, 8), y: leader.y + Math.sin(i * 1.2) * 18 + rand(-8, 8) };
+                    const ang = Math.atan2(target.y - m.y, target.x - m.x);
+                    const sp = m.speed * (0.9 + Math.random() * 0.2);
+                    m.x += Math.cos(ang) * sp * dt;
+                    m.y += Math.sin(ang) * sp * dt;
+                    // boundary
+                    m.x = clamp(m.x, 10, W - 10); m.y = clamp(m.y, 10, H - 10);
+                });
+
+                // update floating texts
+                for (let i = floatingTexts.length - 1; i >= 0; i--) {
+                    const ft = floatingTexts[i];
+                    ft.life -= dt;
+                    ft.y += ft.vy * dt;
+                    if (ft.life <= 0) floatingTexts.splice(i, 1);
+                }
+
+                // enemies chase nearest gang member or leader
+
+                // enemies chase nearest gang member or leader
+                for (let i = enemies.length - 1; i >= 0; i--) {
+                    const e = enemies[i];
+                    // choose target: nearest gang member or leader
+                    let nearest = leader;
+                    let best = Math.hypot(e.x - leader.x, e.y - leader.y);
+                    gang.members.forEach(m => {
+                        const d = Math.hypot(e.x - m.x, e.y - m.y);
+                        if (d < best) { best = d; nearest = m; }
+                    });
+                    const ang = Math.atan2(nearest.y - e.y, nearest.x - e.x);
+                    e.x += Math.cos(ang) * e.speed * dt;
+                    e.y += Math.sin(ang) * e.speed * dt;
+
+                    // simple separation from other enemies
+                    for (let k = i + 1; k < enemies.length; k++) {
+                        const e2 = enemies[k];
+                        const dx = e.x - e2.x;
+                        const dy = e.y - e2.y;
+                        const dist = Math.hypot(dx, dy);
+                        if (dist < e.r + e2.r) {
+                            const force = (e.r + e2.r - dist) / dist * 0.5;
+                            e.x += dx * force * 2; e.y += dy * force * 2;
+                            e2.x -= dx * force * 2; e2.y -= dy * force * 2;
+                        }
+                    }
+
+                    // enemy vs gang collisions: simple melee
+                    // check collision with gang members, leader
+                    // check collision with leader
+                    if (Math.hypot(e.x - leader.x, e.y - leader.y) < e.r + leader.r) {
+                        // damage leader directly
+                        const dmg = e.dmg * dt * 2; // continuous contact damage
+                        leader.hp -= dmg;
+                        leaderHpEl.textContent = Math.ceil(leader.hp);
+                        // visual feedback
+                        if (Math.random() < 0.1) spawnParticle(leader.x, leader.y, rand(-40, 40), rand(-40, 40), 0.4, '#f00', 3);
+                        if (leader.hp <= 0) {
+                            // handled in checkEndRun
+                        }
+                    }
+
+                    for (let j = gang.members.length - 1; j >= 0; j--) {
+                        const m = gang.members[j];
+                        const d = Math.hypot(e.x - m.x, e.y - m.y);
+                        if (d < e.r + m.r) {
+                            // both take damage
+                            m.hp -= e.dmg * 0.14;
+                            e.hp -= (m.dmg || 4) * 0.6;
+                            spawnParticle(m.x, m.y, rand(-40, 40), rand(-40, 40), 0.4, '#ff8', 3);
+
+                            if (Math.random() < 0.1) spawnFloatingText(m.x, m.y, Math.round(e.dmg * 0.14), '#f55');
+                            if (Math.random() < 0.1) spawnFloatingText(e.x, e.y, Math.round((m.dmg || 4) * 0.6), '#fff');
+
+                            if (m.hp <= 0) {
+                                // member dies
+                                gang.members.splice(j, 1);
+                                crewEl.textContent = gang.members.length;
+                                addEvent('A crew member fell.');
+                                punchSound();
+                            }
+                            if (e.hp <= 0) {
+                                // enemy dies, drop cash and score
+                                enemies.splice(i, 1);
+                                const loot = 1 + Math.floor(Math.random() * 3);
+                                cash += loot; score += 10 + Math.floor(Math.random() * 8);
+                                cashEl.textContent = cash; scoreEl.textContent = score;
+                                addEvent('Enemy defeated — cash +' + loot);
+                                cashSound();
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                // bullets update & collisions with enemies
+                for (let i = bullets.length - 1; i >= 0; i--) {
+                    const b = bullets[i];
+                    b.ttl -= dt;
+                    b.x += b.vx * dt;
+                    b.y += b.vy * dt;
+                    if (b.ttl <= 0 || b.x < -30 || b.x > W + 30 || b.y < -30 || b.y > H + 30) { bullets.splice(i, 1); continue; }
+                    // collision with enemies
+                    for (let j = enemies.length - 1; j >= 0; j--) {
+                        const e = enemies[j];
+                        const d = Math.hypot(b.x - e.x, b.y - e.y);
+                        if (d < e.r + 3) {
+                            e.hp -= b.dmg;
+                            bullets.splice(i, 1);
+                            spawnParticle(e.x, e.y, rand(-80, 80), rand(-80, 80), 0.5, '#f88', 3);
+                            spawnFloatingText(e.x, e.y, b.dmg, '#fff', 16);
+                            if (e.hp <= 0) {
+                                // enemy dead
+                                enemies.splice(j, 1);
+                                const loot = 1 + Math.floor(Math.random() * 3);
+                                cash += loot; score += 10 + Math.floor(Math.random() * 10);
+                                cashEl.textContent = cash; scoreEl.textContent = score;
+                                addEvent('Enemy down — loot ' + loot);
+                                cashSound();
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                // particles decay
+                for (let i = particles.length - 1; i >= 0; i--) {
+                    const p = particles[i];
+                    p.life -= dt;
+                    p.x += p.dx * dt;
+                    p.y += p.dy * dt;
+                    p.dy += p.gravity * dt * 50; // gravity
+                    p.dx *= p.friction; p.dy *= p.friction;
+                    if (p.life <= 0) particles.splice(i, 1);
+                }
+
+                // check wave clear -> open shop after small delay
+                if (enemies.length === 0) {
+                    // provide delayed shop only once per wave
+                    if (!waveClearedAt[wave]) {
+                        waveClearedAt[wave] = performance.now();
+                    } else {
+                        if (performance.now() - waveClearedAt[wave] > 800 && !inShop) {
+                            // reward shards/cash scaling with performance
+                            const reward = 2 + Math.floor(score / Math.max(30, wave * 10));
+                            cash += reward; cashEl.textContent = cash;
+                            addEvent(`Wave ${wave} cleared — reward ${reward} cash`);
+                            openShopModal();
+                        }
+                    }
+                }
+            }
+
+            // track when wave was cleared to avoid opening shop immediately multiple times
+            const waveClearedAt = {};
+
+            /* ==============================
+               Rendering
+               ============================== */
+            let cameraShake = 0;
+            function render() {
+                // background
+                ctx.fillStyle = '#071827';
+                ctx.fillRect(0, 0, W, H);
+
+                // subtle grid/backdrop
+                ctx.save();
+                ctx.globalAlpha = 0.06;
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 1;
+                for (let x = 0; x < W; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+                for (let y = 0; y < H; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+                ctx.restore();
+
+                // world offset for camera shake
+                const cx = Math.round(rand(-cameraShake, cameraShake));
+                const cy = Math.round(rand(-cameraShake, cameraShake));
+                ctx.save();
+                ctx.translate(cx, cy);
+
+                // draw particles (under entities)
+                particles.forEach(p => {
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+                });
+
+                // draw enemies
+                enemies.forEach(e => {
+                    ctx.shadowBlur = 10; ctx.shadowColor = e.color;
+                    const g = ctx.createRadialGradient(e.x, e.y, 0, e.x, e.y, e.r);
+                    g.addColorStop(0, '#fff'); g.addColorStop(1, e.color);
+                    ctx.fillStyle = g;
+                    ctx.beginPath(); ctx.arc(e.x, e.y, e.r, 0, Math.PI * 2); ctx.fill();
+                    ctx.shadowBlur = 0;
+
+                    // hp bar
+                    ctx.fillStyle = '#222';
+                    ctx.fillRect(e.x - e.r, e.y - e.r - 8, e.r * 2, 5);
+                    ctx.fillStyle = e.color;
+                    ctx.fillRect(e.x - e.r, e.y - e.r - 8, (e.hp / e.maxHp) * e.r * 2, 5);
+                });
+
+                // draw gang members (behind leader)
+                gang.members.forEach(m => {
+                    ctx.fillStyle = '#89ff9b';
+                    ctx.beginPath(); ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2); ctx.fill();
+                    // small hp ring
+                    ctx.strokeStyle = 'rgba(0,0,0,0.25)';
+                    ctx.beginPath(); ctx.arc(m.x, m.y, m.r + 4, 0, Math.PI * 2); ctx.stroke();
+                });
+
+                // draw leader
+                ctx.shadowBlur = 15; ctx.shadowColor = '#6ef';
+                const gL = ctx.createRadialGradient(leader.x, leader.y, 0, leader.x, leader.y, leader.r);
+                gL.addColorStop(0, '#aef'); gL.addColorStop(1, '#6ef');
+                ctx.fillStyle = gL;
+                ctx.beginPath(); ctx.arc(leader.x, leader.y, leader.r, 0, Math.PI * 2); ctx.fill();
+                ctx.shadowBlur = 0;
+                ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+
+                // dash cooldown indicator
+                const now = performance.now();
+                const dashPct = Math.min(1, (now - leader.lastDash) / leader.dashCooldown);
+                if (dashPct < 1) {
+                    ctx.strokeStyle = `rgba(255, 255, 255, 0.5)`;
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.arc(leader.x, leader.y, leader.r + 6, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * dashPct);
+                    ctx.stroke();
+                }
+
+                // draw bullets
+                bullets.forEach(b => {
+                    ctx.shadowBlur = 6; ctx.shadowColor = '#bfe';
+                    ctx.fillStyle = '#bfe';
+                    ctx.beginPath(); ctx.arc(b.x, b.y, 3.5, 0, Math.PI * 2); ctx.fill();
+                    ctx.shadowBlur = 0;
+                });
+
+                // draw floating texts
+                floatingTexts.forEach(ft => {
+                    ctx.globalAlpha = Math.max(0, ft.life);
+                    ctx.fillStyle = ft.color;
+                    ctx.font = `bold ${ft.size}px sans-serif`;
+                    ctx.fillText(ft.text, ft.x, ft.y);
+                    ctx.globalAlpha = 1.0;
+                });
+
+                ctx.restore();
+
+                // HUD overlays: scores & small animated bars
+                ctx.fillStyle = '#fff'; ctx.font = '12px system-ui';
+                ctx.fillText(`HP: ${Math.max(0, Math.round(avgGangHp()))}`, 14, H - 14);
+
+                // subtle camera shake decay
+                cameraShake *= 0.92;
+            }
+
+            /* ==============================
+               Helpers
+               ============================== */
+            function avgGangHp() {
+                if (gang.members.length === 0) return 0;
+                return gang.members.reduce((s, m) => s + m.hp, 0) / gang.members.length;
+            }
+
+            /* ==============================
+               Game flow: init, loop, start
+               ============================== */
+            function gameLoop(now) {
+                const dt = Math.min(0.04, (now - last) / 1000);
+                last = now;
+                if (running) {
+                    step(dt);
+                }
+                render();
+                requestAnimationFrame(gameLoop);
+            }
+
+            // initial setup
+            function resetGame() {
+                wave = 0; score = 0; cash = 0;
+                gang.members.length = 0; enemies.length = 0; bullets.length = 0; particles.length = 0;
+                waveEl.textContent = wave; scoreEl.textContent = score; cashEl.textContent = cash;
+                gang.members = [];
+                // spawn starting gang of 2
+                spawnGangMember(); spawnGangMember();
+                leader.hp = leader.maxHp;
+                leaderHpEl.textContent = leader.hp;
+                crewEl.textContent = gang.members.length;
+                startNextWave();
+                // reset wave cleared tracking
+                for (const k in waveClearedAt) delete waveClearedAt[k];
+                addEvent('Run started.');
+            }
+
+            // handle end-of-run (leader die condition is when all gang dead)
+            function checkEndRun() {
+                if (leader.hp <= 0 || gang.members.length === 0) {
+                    running = false;
+                    addEvent('Leader fallen or crew wiped. Run over.');
+                    finalizeRun();
+                    showModal(`YOU LOST\nScore: ${score}\nWaves: ${wave}\n\nRestart?`, [
+                        { text: 'Restart', action: () => { hideModal(); resetGame(); running = true; } },
+                        { text: 'Close', action: () => { hideModal(); } }
+                    ]);
+                }
+            }
+
+            function finalizeRun() {
+                // store bests
+                if (score > highScore) {
+                    highScore = score;
+                    localStorage.setItem('sr_high', highScore);
+                    highScoreEl.textContent = highScore;
+                    addEvent('NEW HIGH SCORE: ' + highScore);
+                }
+                if (wave > bestWaves) {
+                    bestWaves = wave;
+                    localStorage.setItem('sr_waves', bestWaves);
+                    bestWavesEl.textContent = bestWaves;
+                }
+            }
+
+            /* ==============================
+               Modal utilities
+               ============================== */
+            function showModal(html, buttons) {
+                overlay.innerHTML = '';
+                const modal = document.createElement('div'); modal.className = 'modal';
+                modal.innerHTML = `<div style="white-space:pre-wrap;margin-bottom:12px">${html}</div>`;
+                const row = document.createElement('div'); row.style.display = 'flex'; row.style.gap = '8px'; row.style.justifyContent = 'flex-end';
+                buttons.forEach(b => {
+                    const el = document.createElement('button'); el.textContent = b.text;
+                    el.onclick = () => { b.action(); };
+                    row.appendChild(el);
+                });
+                modal.appendChild(row);
+                overlay.appendChild(modal);
+            }
+            function hideModal() { overlay.innerHTML = ''; }
+
+            /* ==============================
+               UI events
+               ============================== */
+            pauseBtn.onclick = () => { running = !running; pauseBtn.textContent = running ? 'Pause' : 'Resume'; if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume(); };
+            restartBtn.onclick = () => { if (confirm('Restart run?')) resetGame(); running = true; };
+            screenshotBtn.onclick = () => { const url = canvas.toDataURL('image/png'); const a = document.createElement('a'); a.href = url; a.download = 'street_rumble_' + Date.now() + '.png'; a.click(); };
+
+            // spawn periodic random events
+            setInterval(() => {
+                if (!running) return;
+                // 7% chance every 3s, scale with wave
+                if (Math.random() < Math.min(0.22, 0.04 + wave * 0.01)) {
+                    triggerRandomEvent();
+                }
+                // spawn emergency enemy reinforcements occasionally
+                if (Math.random() < Math.min(0.2, 0.03 + wave * 0.02)) {
+                    spawnEnemy(Math.random() < 0.2 ? 'brute' : 'thug');
+                }
+                // small passive income
+                cash += 1; cashEl.textContent = cash;
+            }, 3000);
+
+            // check run end periodically
+            setInterval(() => {
+                if (!running) return;
+                checkEndRun();
+            }, 700);
+
+            // start loop
+            resetGame();
+            requestAnimationFrame(gameLoop);
+
+            // small helper: open initial instruction modal
+            showModal("Street Rumble — Quick briefing:\n\n- Move the leader with the mouse. Click/tap to unleash a short burst.\n- Your crew auto-follows and fights nearby enemies.\n- Between waves you'll get a shop pop-up to buy perks.\n- Survive as many waves as possible. Screenshot your best moments!\n\nReady?", [
+                { text: 'Play', action: () => { hideModal(); } }
+            ]);
+
+            // expose some debug helpers for easy polishing
+            window.__sr = {
+                spawnEnemy, spawnGangMember, addEvent, state: () => ({ wave, score, cash, gang, enemies })
+            };
+
+            // simple auto-scaling UI cost display (visual)
+            function updateCostsUI() {
+                document.getElementById('costRecruit').textContent = costs.recruit;
+                document.getElementById('costDmg').textContent = costs.dmg;
+                document.getElementById('costSpeed').textContent = costs.speed;
+                document.getElementById('costAOE').textContent = costs.aoe;
+                document.getElementById('costHeal').textContent = costs.heal;
+            }
+            updateCostsUI();
+
+            // basic mobile hint
+            if (/Mobi|Android/i.test(navigator.userAgent)) {
+                addEvent('Mobile detected: Try tapping to burst and dragging to move leader.');
+            }
+
+            // small heartbeat to add camera shake occasionally after big events
+            setInterval(() => { cameraShake = Math.min(10, cameraShake + 3); }, 8000);
+
+        })();
+    </script>
+</body>
+
+</html>
