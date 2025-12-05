@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 interface FeatureCardProps {
   title: string;
   description: string;
@@ -13,12 +15,19 @@ export const FeatureCard: React.FC<FeatureCardProps> = ({
 }) => (
   <div className="flex flex-col text-start items-start w-full lg:w-auto">
     <div
-      className="relative flex h-44 w-full items-center justify-center rounded-2xl bg-cover bg-center shadow-lg opacity-88
-                 sm:h-56 lg:h-74"
-      style={{ backgroundImage: `url(${imageUrl})` }}
+      className="relative flex h-44 w-full items-center justify-center rounded-2xl shadow-lg opacity-88
+                 sm:h-56 lg:h-74 overflow-hidden"
     >
-      <div className="absolute inset-0 bg-black opacity-30 rounded-2xl" />
-      <div className="relative z-10">{icon}</div>
+      <Image
+        src={imageUrl}
+        alt={title}
+        fill
+        className="object-cover object-center"
+        priority
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+      />
+      <div className="absolute inset-0 bg-black opacity-30 z-10" />
+      <div className="relative z-20">{icon}</div>
     </div>
     <div className="mt-6 ">
       <h3 className="text-lg sm:text-xl lg:text-xl font-bold tracking-tighter text-[#2B281F]">

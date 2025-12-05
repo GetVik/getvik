@@ -45,6 +45,7 @@ const nextConfig: NextConfig = {
         hostname: 'github.com',
       },
     ],
+    formats: ['image/avif', 'image/webp'],
   },
 
   async headers() {

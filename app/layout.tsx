@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
 import { AuthProvider } from '@/components/auth/AuthProvider';
+import Script from 'next/script';
 import QueryProvider from '@/components/queryProvider/QueryProvider';
 import { Toaster } from 'react-hot-toast';
 import { CartProvider } from '@/context/CartContext';
@@ -49,7 +50,7 @@ const inter = localFont({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://getvik.live'),
   title: {
     default: 'Sell Digital Products in India | Templates, PDFs & Code Tools',
     template: '%s | GetVik',
@@ -79,7 +80,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_IN',
-    url: 'http://localhost:3000',
+    url: 'https://getvik.live',
     siteName: 'GetVik',
     title: 'GetVik - India\'s Digital Marketplace for Creators',
     description:
@@ -142,7 +143,14 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <head>
-
+        <Script
+          src="https://checkout.razorpay.com/v1/checkout.js"
+          strategy="lazyOnload"
+        />
+        <Script
+          src="https://sdk.cashfree.com/js/v3/cashfree.js"
+          strategy="lazyOnload"
+        />
       </head>
       <body className={`font-sans antialiased bg-black text-white`}>
         <QueryProvider>
