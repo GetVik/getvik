@@ -47,9 +47,9 @@ const cardData = [
     imageUrl: "/bgAIsection.avif",
   },
   {
-    title: "Instant UPI payouts.",
+    title: "Fast UPI payouts.",
     description:
-      "Receive payments directly to your account within seconds via UPI.",
+      "Request payouts anytime (₹100 min) and receive funds in 5-7 days via UPI or bank.",
     icon: <UpiIcon />,
     imageUrl: "/bgAIsection.avif",
   },
